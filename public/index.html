@@ -1,44 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root">
-      <section class="mvctodo">
-        <header id="mainHeader">
-            <h1>todos</h1>
-             <input id="add" class="add" type="text" placeholder="What needs to be done?" autofocus>
-             <label id="selectAll"></label> 
-        </header>
-        <section>
-            <ul id="todoList">
-                   
-            </ul>
-        </section>
-        <footer class="mvcFooter" id="mvcFooter" style="display: none">
-            <label id="divLabel"></label>
-            <ul class="selectFilter">
-                <li>
-                    <a href="#/all" class="allSelected" id="allSelected">All</a>
-                </li>
-                <li>
-                    <a href="#/active" class="allActive" id="allActive">Active</a>
-                </li>
-                <li>
-                    <a href="#/completed" class="allCompleted" id="allCompleted">Completed</a>
-                </li>
-            </ul>
-        </footer>
-    </section>
-    </div>
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <link rel="stylesheet" type="text/css" media="screen" href="index.css"/>
+  <title>React App</title>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root"></div>
+</body>
 </html>
