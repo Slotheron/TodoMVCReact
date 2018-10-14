@@ -126,13 +126,6 @@ input[type=checkbox]:checked + .checkBoxLabel {
     border-color: rgba(240, 205, 9, 0.5);
 }
 
-.strike {
-    text-decoration: line-through;
-    font-size: 24px;
-    padding-left: 0.5em;
-    color: gray;
-}
-
 .mvcFooter {
     border: 1px solid #ccc;
     text-align: center;

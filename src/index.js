@@ -1,35 +1,49 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var app = app || {};
-app.allView = 'all'
-app.activeView = 'active';
-app.completedView = 'completed';
-app.count = 0;
-app.trueCount = 0;
-app.allChecked = false;
+var allView = 'all'
+var activeView = 'active';
+var completedView = 'completed';
+var trueCount = 0;
+var allChecked = false;
 
-class Line extends React.Component {
+var count = 0;
+var totalCount = 0;
+
+class List extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      value: props,
+  }
+
+  removeLine(key) {
+    totalCount --;
+    this.props.removeLine(key);
+  }
+
+  checkLine(key) {
+    this.props.checkLine(key);
+  }
+
+  checkboxStyle(checked) {
+    return {
+      textDecoration: checked ? 'line-through' : 'none',
     };
   }
-  handleCheck(e) {
-    e.checked = true;
-  }
+
   render() {
     return (
-      <li>
-        <input type='checkbox' onClick={(e) => this.handleCheck(e)} />
-        <label for='checkBox' className='checkBoxLabel' />
-        <label className='listItemLabel'>
-          {this.state.value}
-        </label>
-        <button className='buttonItem' onClick={this.props.onClick} />
-      </li>
-    );
+      <ul id="todoList">
+        {this.props.lineList.map((line) =>
+          <li className='listItem' key={line.key} id={'listItem' + line.key}>
+            <input type='checkbox' checked={line.checked} id={'checkBox' + line.key} onChange={() => this.checkLine(line)} />
+            <label htmlFor={'checkBox' + line.key} className='checkBoxLabel' />
+            <label className='listItemLabel' style={this.checkboxStyle(line.checked)}>
+              {line.value}
+            </label>
+            <button className='buttonItem' onClick={() => this.removeLine(line.key)} />
+          </li>)}
+      </ul>
+    )
   }
 }
 
@@ -37,37 +51,88 @@ class Todo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lines: []
+      lines: [],
+      text: ''
     };
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleRemoveLine = this.handleRemoveLine.bind(this);
+    this.handleLineCheck = this.handleLineCheck.bind(this);
+    this.showHideFooter = this.showHideFooter.bind(this);
   }
+
+  handleOnChange = event => {
+    this.setState({ text: event.target.value });
+  }
+
+  validate() {
+    let validationText = this.state.text.trim();
+    if (validationText.length === 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
   handleKeyPress(e) {
     if (e.key === "Enter") {
-      if (validate()) {
+      if (this.validate()) {
         e.preventDefault();
-        let newLines = this.state.lines.slice();
-        newLines= [...this.state.lines, e.target.value];
         this.setState({
-          lines: newLines
+          lines: [...this.state.lines, { key: count, value: this.state.text, checked: false }],
+          text: ''
         });
-        e.target.value = ''
+        count++;
+        totalCount++;
       }
     }
   };
+
+  handleRemoveLine(key) {
+    let filteredLines = this.state.lines.filter(function (line) {
+      return (line.key !== key);
+    });
+
+    this.setState({
+      lines: filteredLines
+    });
+  }
+
+  handleLineCheck = ({ key, value, checked }) => {
+    let newLines = this.state.lines.map(line => line.key === key ? { key, value, checked: !checked } : line)
+    this.setState({
+      lines: newLines
+    });
+  }
+
+  showHideFooter() {
+    let show = false;
+    if (totalCount == 0) {
+      show = false;
+    }
+    else {
+      show = true;
+    }
+    return {
+      display: show ? 'block' : 'none',
+    };
+  }
 
   render() {
     return (
       <section className="mvctodo">
         <header id="mainHeader">
           <h1>todos</h1>
-          <input id="add" className="add" type="text" placeholder="What needs to be done?" onKeyDown={(e) => this.handleKeyPress(e)} autoFocus />
+          <input id="add" className="add" type="text" placeholder="What needs to be done?" value={this.state.text} onChange={this.handleOnChange} onKeyDown={(e) => this.handleKeyPress(e)} autoFocus />
           <label id="selectAll"></label>
         </header>
         <section>
-          <ul id="todoList">
-            {this.state.lines}
-          </ul>
+          <List
+            lineList={this.state.lines}
+            removeLine={this.handleRemoveLine}
+            checkLine={this.handleLineCheck} />
         </section>
-        <footer className="mvcFooter" id="mvcFooter" style={{ display: 'none' }}>
+        <footer className="mvcFooter" id="mvcFooter" style={this.showHideFooter()}>
           <label id="divLabel"></label>
           <ul className="selectFilter">
             <li>
@@ -91,14 +156,3 @@ ReactDOM.render(
   <Todo />,
   document.getElementById('root')
 );
-
-function validate() {
-  let text = document.getElementById("add");
-  let validationText = text.value.trim();
-  if (validationText.length === 0) {
-    return false;
-  }
-  else {
-    return true;
-  }
-}
