@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var allView = 'all'
-var activeView = 'active';
-var completedView = 'completed';
-var trueCount = 0;
+var currentView = 'all'
 var allChecked = false;
 
 var count = 0;
@@ -53,7 +50,8 @@ class Todo extends React.Component {
     super(props);
     this.state = {
       lines: [],
-      text: ''
+      text: '',
+      view: currentView
     };
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleRemoveLine = this.handleRemoveLine.bind(this);
@@ -61,6 +59,8 @@ class Todo extends React.Component {
     this.showHideFooter = this.showHideFooter.bind(this);
     this.updateItemCount = this.updateItemCount.bind(this);
     this.showHideClearButton = this.showHideClearButton.bind(this);
+    this.showView = this.showView.bind(this);
+    this.showHighlight = this.showHighlight.bind(this);
   }
 
   handleOnChange = event => {
@@ -82,7 +82,7 @@ class Todo extends React.Component {
       if (this.validate()) {
         e.preventDefault();
         this.setState({
-          lines: [...this.state.lines, { key: count, value: this.state.text, checked: false }],
+          lines: [...this.state.lines, { key: uniqueID, value: this.state.text, checked: false }],
           text: ''
         });
         count++;
@@ -125,7 +125,7 @@ class Todo extends React.Component {
 
   showHideFooter() {
     let show = false;
-    if (totalCount == 0) {
+    if (totalCount === 0) {
       show = false;
     }
     else {
@@ -137,7 +137,7 @@ class Todo extends React.Component {
   }
 
   updateItemCount() {
-    if (count == 0 || count > 1) {
+    if (count === 0 || count > 1) {
       return count + ' items left';
     }
     else {
@@ -160,6 +160,45 @@ class Todo extends React.Component {
     }
   }
 
+  showView(viewState){
+    if(viewState === 'all'){
+      this.state.view = 'all'
+    }
+    else if(viewState === 'active'){
+      this.state.view = 'active'
+    }
+    else if(viewState === 'completed'){
+      this.state.view = 'completed'
+    }
+  }
+
+  //placeholder, currently does not work
+  showHighlight(selected){
+    if(this.state.view === 'all' && selected === 'all'){
+      return 'rgba(240, 205, 9, 0.5)'
+    }
+    else if(this.state.view === 'active' && selected === 'active'){
+      return 'rgba(240, 205, 9, 0.5)'
+    }
+    else if(this.state.view === 'completed' && selected === 'completed'){
+      return 'rgba(240, 205, 9, 0.5)'
+    }
+    else{
+      if(selected === 'all'){
+        return 'none'
+       
+      }
+      else if(selected === 'active'){
+        return 'none'
+        
+      }
+      else if(selected === 'completed'){
+        return 'none'
+        
+      }
+    }
+  }
+
   render() {
     return (
       <section className="mvctodo">
@@ -178,13 +217,13 @@ class Todo extends React.Component {
           <label id="divLabel"> {this.updateItemCount()} </label>
           <ul className="selectFilter">
             <li>
-              <a href="#/all" className="allSelected" id="allSelected">All</a>
+              <a href="#/all" style={{borderColor: this.showHighlight('all')}} className="allSelected" onClick={(e) => this.showView('all')}>All</a>
             </li>
             <li>
-              <a href="#/active" className="allActive" id="allActive">Active</a>
+              <a href="#/active" style={{borderColor: this.showHighlight('active')}} className="allActive" onClick={(e) =>this.showView('active')}>Active</a>
             </li>
             <li>
-              <a href="#/completed" className="allCompleted" id="allCompleted">Completed</a>
+              <a href="#/completed" style={{borderColor: this.showHighlight('completed')}} className="allCompleted" onClick={(e) =>this.showView('completed')}>Completed</a>
             </li>
             <li className="clearAllCompleteLi" id="clearAllCompleteLi">
               <button className="clearAllComplete" id="clearAllComplete" style={this.showHideClearButton()}>Clear completed</button>
