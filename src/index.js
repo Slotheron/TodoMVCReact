@@ -9,6 +9,7 @@ var allChecked = false;
 
 var count = 0;
 var totalCount = 0;
+var uniqueID = 0;
 
 class List extends React.Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class List extends React.Component {
   }
 
   removeLine(key) {
-    totalCount --;
+    totalCount--;
     this.props.removeLine(key);
   }
 
@@ -58,6 +59,8 @@ class Todo extends React.Component {
     this.handleRemoveLine = this.handleRemoveLine.bind(this);
     this.handleLineCheck = this.handleLineCheck.bind(this);
     this.showHideFooter = this.showHideFooter.bind(this);
+    this.updateItemCount = this.updateItemCount.bind(this);
+    this.showHideClearButton = this.showHideClearButton.bind(this);
   }
 
   handleOnChange = event => {
@@ -83,12 +86,21 @@ class Todo extends React.Component {
           text: ''
         });
         count++;
+        uniqueID++;
         totalCount++;
       }
     }
   };
 
   handleRemoveLine(key) {
+    let singleLine = this.state.lines.find((lineItem) => {
+      return lineItem.key === key;
+    });
+
+    if (singleLine.checked === false) {
+      count--;
+    }
+
     let filteredLines = this.state.lines.filter(function (line) {
       return (line.key !== key);
     });
@@ -99,6 +111,12 @@ class Todo extends React.Component {
   }
 
   handleLineCheck = ({ key, value, checked }) => {
+    if (checked === false) {
+      count--;
+    }
+    else {
+      count++;
+    }
     let newLines = this.state.lines.map(line => line.key === key ? { key, value, checked: !checked } : line)
     this.setState({
       lines: newLines
@@ -118,13 +136,37 @@ class Todo extends React.Component {
     };
   }
 
+  updateItemCount() {
+    if (count == 0 || count > 1) {
+      return count + ' items left';
+    }
+    else {
+      return count + ' item left';
+    }
+  }
+
+  showHideClearButton(){
+    let show = false;
+    if(totalCount > 0){
+      if(totalCount === count){
+        show = false;
+      }
+      else{
+        show = true;
+      }
+    }
+    return {
+      display: show ? 'inline' : 'none'
+    }
+  }
+
   render() {
     return (
       <section className="mvctodo">
         <header id="mainHeader">
           <h1>todos</h1>
-          <input id="add" className="add" type="text" placeholder="What needs to be done?" value={this.state.text} onChange={this.handleOnChange} onKeyDown={(e) => this.handleKeyPress(e)} autoFocus />
           <label id="selectAll"></label>
+          <input id="add" className="add" type="text" placeholder="What needs to be done?" value={this.state.text} onChange={this.handleOnChange} onKeyDown={(e) => this.handleKeyPress(e)} autoFocus />
         </header>
         <section>
           <List
@@ -133,7 +175,7 @@ class Todo extends React.Component {
             checkLine={this.handleLineCheck} />
         </section>
         <footer className="mvcFooter" id="mvcFooter" style={this.showHideFooter()}>
-          <label id="divLabel"></label>
+          <label id="divLabel"> {this.updateItemCount()} </label>
           <ul className="selectFilter">
             <li>
               <a href="#/all" className="allSelected" id="allSelected">All</a>
@@ -143,6 +185,9 @@ class Todo extends React.Component {
             </li>
             <li>
               <a href="#/completed" className="allCompleted" id="allCompleted">Completed</a>
+            </li>
+            <li className="clearAllCompleteLi" id="clearAllCompleteLi">
+              <button className="clearAllComplete" id="clearAllComplete" style={this.showHideClearButton()}>Clear completed</button>
             </li>
           </ul>
         </footer>

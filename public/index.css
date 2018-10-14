@@ -43,7 +43,7 @@ body {
     box-sizing: border-box;
 }
 
-.add + #selectAll {
+#selectAll {
     background: url("https://web.2018.plus.jakobkallin.com/project/icons/circle-down.svg") no-repeat;
     position: absolute;
     height: 34px;
@@ -53,7 +53,7 @@ body {
     opacity: 0.5;
 }
 
-button {
+.buttonItem {
     margin-left: 5px;
     float: right;
     background: url("https://web.2018.plus.jakobkallin.com/project/icons/cross.svg");
