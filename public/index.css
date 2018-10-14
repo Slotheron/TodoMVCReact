@@ -126,6 +126,13 @@ input[type=checkbox]:checked + .checkBoxLabel {
     border-color: rgba(240, 205, 9, 0.5);
 }
 
+.selectFilter li a.selected {
+    border-color: rgba(240, 205, 9, 0.5);
+}
+.selectFilter li a.unSelected {
+    border-color: none;
+}
+
 .mvcFooter {
     border: 1px solid #ccc;
     text-align: center;

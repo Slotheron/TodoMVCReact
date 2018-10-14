@@ -51,7 +51,10 @@ class Todo extends React.Component {
     this.state = {
       lines: [],
       text: '',
-      view: currentView
+      view: currentView,
+      all: 'selected',
+      active: 'unSelected',
+      completed: 'unSelected'
     };
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleRemoveLine = this.handleRemoveLine.bind(this);
@@ -162,40 +165,47 @@ class Todo extends React.Component {
 
   showView(viewState){
     if(viewState === 'all'){
-      this.state.view = 'all'
+      this.setState({
+        view: 'all'
+      });
+      this.showHighlight('all');
     }
     else if(viewState === 'active'){
-      this.state.view = 'active'
+      this.setState({
+        view: 'active'
+      });
+      this.showHighlight('active');
     }
     else if(viewState === 'completed'){
-      this.state.view = 'completed'
+      this.setState({
+        view: 'completed'
+      });
+      this.showHighlight('completed');
     }
   }
 
   //placeholder, currently does not work
   showHighlight(selected){
     if(this.state.view === 'all' && selected === 'all'){
-      return 'rgba(240, 205, 9, 0.5)'
+      this.setState({
+        all: 'selected',
+        active: 'unSelected',
+        completed: 'unSelected'
+      });
     }
     else if(this.state.view === 'active' && selected === 'active'){
-      return 'rgba(240, 205, 9, 0.5)'
+      this.setState({
+        all: 'unSelected',
+        active: 'selected',
+        completed: 'unSelected'
+      });
     }
     else if(this.state.view === 'completed' && selected === 'completed'){
-      return 'rgba(240, 205, 9, 0.5)'
-    }
-    else{
-      if(selected === 'all'){
-        return 'none'
-       
-      }
-      else if(selected === 'active'){
-        return 'none'
-        
-      }
-      else if(selected === 'completed'){
-        return 'none'
-        
-      }
+      this.setState({
+        all: 'unSelected',
+        active: 'unSelected',
+        completed: 'selected'
+      });
     }
   }
 
@@ -217,13 +227,13 @@ class Todo extends React.Component {
           <label id="divLabel"> {this.updateItemCount()} </label>
           <ul className="selectFilter">
             <li>
-              <a href="#/all" style={{borderColor: this.showHighlight('all')}} className="allSelected" onClick={(e) => this.showView('all')}>All</a>
+              <a href="#/all" className={this.state.all} onClick={(e) => this.showView('all')}>All</a>
             </li>
             <li>
-              <a href="#/active" style={{borderColor: this.showHighlight('active')}} className="allActive" onClick={(e) =>this.showView('active')}>Active</a>
+              <a href="#/active" className={this.state.active} onClick={(e) =>this.showView('active')}>Active</a>
             </li>
             <li>
-              <a href="#/completed" style={{borderColor: this.showHighlight('completed')}} className="allCompleted" onClick={(e) =>this.showView('completed')}>Completed</a>
+              <a href="#/completed" className={this.state.completed} onClick={(e) =>this.showView('completed')}>Completed</a>
             </li>
             <li className="clearAllCompleteLi" id="clearAllCompleteLi">
               <button className="clearAllComplete" id="clearAllComplete" style={this.showHideClearButton()}>Clear completed</button>
