@@ -64,6 +64,7 @@ class Todo extends React.Component {
     this.showHideClearButton = this.showHideClearButton.bind(this);
     this.showView = this.showView.bind(this);
     this.showHighlight = this.showHighlight.bind(this);
+    this.checkAll = this.checkAll.bind(this);
   }
 
   handleOnChange = event => {
@@ -118,6 +119,7 @@ class Todo extends React.Component {
       count--;
     }
     else {
+      allChecked = false;
       count++;
     }
     let newLines = this.state.lines.map(line => line.key === key ? { key, value, checked: !checked } : line)
@@ -174,7 +176,7 @@ class Todo extends React.Component {
     else if (viewState === 'completed') {
       currentView = 'completed';
     }
-    this.setState({view: currentView}, function () {
+    this.setState({ view: currentView }, function () {
       this.showHighlight(currentView);
     });
 
@@ -205,12 +207,37 @@ class Todo extends React.Component {
     }
   }
 
+  checkAll() {
+    if (allChecked === false) {
+      let newLines = this.state.lines.slice(0);
+      newLines.forEach(line => {
+        line.checked = true;        
+      });
+      this.setState({
+        lines: newLines
+      });
+      allChecked = true;
+      count = 0;
+    }
+    else {
+      let newLines = this.state.lines.slice(0);
+      newLines.forEach(line => {
+        line.checked = false;        
+      });
+      this.setState({
+        lines: newLines
+      });
+      allChecked = false;
+      count = newLines.length;
+    }
+  }
+
   render() {
     return (
       <section className="mvctodo">
         <header id="mainHeader">
           <h1>todos</h1>
-          <label id="selectAll"></label>
+          <label id="selectAll" onClick={(e) => this.checkAll()}></label>
           <input id="add" className="add" type="text" placeholder="What needs to be done?" value={this.state.text} onChange={this.handleOnChange} onKeyDown={(e) => this.handleKeyPress(e)} autoFocus />
         </header>
         <section>
