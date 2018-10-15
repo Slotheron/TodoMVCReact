@@ -65,6 +65,8 @@ class Todo extends React.Component {
     this.showView = this.showView.bind(this);
     this.showHighlight = this.showHighlight.bind(this);
     this.checkAll = this.checkAll.bind(this);
+    this.viewTab = this.viewTab.bind(this);
+    this.clearCompleted = this.clearCompleted.bind(this);
   }
 
   handleOnChange = event => {
@@ -211,7 +213,7 @@ class Todo extends React.Component {
     if (allChecked === false) {
       let newLines = this.state.lines.slice(0);
       newLines.forEach(line => {
-        line.checked = true;        
+        line.checked = true;
       });
       this.setState({
         lines: newLines
@@ -222,7 +224,7 @@ class Todo extends React.Component {
     else {
       let newLines = this.state.lines.slice(0);
       newLines.forEach(line => {
-        line.checked = false;        
+        line.checked = false;
       });
       this.setState({
         lines: newLines
@@ -230,6 +232,27 @@ class Todo extends React.Component {
       allChecked = false;
       count = newLines.length;
     }
+  }
+
+  viewTab() {
+    let viewLines = this.state.lines.slice(0);
+    if (currentView === 'active') {
+      viewLines = this.state.lines.filter((line) => line.checked  === false)
+    }
+    if (currentView === 'completed') {
+      viewLines = this.state.lines.filter((line) => line.checked === true)
+    }
+    return viewLines;
+  }
+
+  clearCompleted(){
+    let filteredLines = this.state.lines.filter(function (line) {
+      return (line.checked === false);
+    });
+    this.setState({lines: filteredLines});
+    
+    totalCount = filteredLines.length;
+    count = filteredLines.length;
   }
 
   render() {
@@ -242,7 +265,8 @@ class Todo extends React.Component {
         </header>
         <section>
           <List
-            lineList={this.state.lines}
+            lineList={this.viewTab()}
+            viewTab={this.currentView}
             removeLine={this.handleRemoveLine}
             checkLine={this.handleLineCheck} />
         </section>
@@ -259,7 +283,7 @@ class Todo extends React.Component {
               <a href="#/completed" className={this.state.completed} onClick={(e) => this.showView('completed')}>Completed</a>
             </li>
             <li className="clearAllCompleteLi" id="clearAllCompleteLi">
-              <button className="clearAllComplete" id="clearAllComplete" style={this.showHideClearButton()}>Clear completed</button>
+              <button className="clearAllComplete" id="clearAllComplete" style={this.showHideClearButton()} onClick={(e) => this.clearCompleted()}>Clear completed</button>
             </li>
           </ul>
         </footer>
