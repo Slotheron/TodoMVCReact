@@ -148,13 +148,13 @@ class Todo extends React.Component {
     }
   }
 
-  showHideClearButton(){
+  showHideClearButton() {
     let show = false;
-    if(totalCount > 0){
-      if(totalCount === count){
+    if (totalCount > 0) {
+      if (totalCount === count) {
         show = false;
       }
-      else{
+      else {
         show = true;
       }
     }
@@ -163,44 +163,40 @@ class Todo extends React.Component {
     }
   }
 
-  showView(viewState){
-    if(viewState === 'all'){
-      this.setState({
-        view: 'all'
-      });
-      this.showHighlight('all');
+  //to have the method fire after the state change, it must be used as a callback.
+  showView(viewState) {
+    if (viewState === 'all') {
+      currentView = 'all';
     }
-    else if(viewState === 'active'){
-      this.setState({
-        view: 'active'
-      });
-      this.showHighlight('active');
+    else if (viewState === 'active') {
+      currentView = 'active';
     }
-    else if(viewState === 'completed'){
-      this.setState({
-        view: 'completed'
-      });
-      this.showHighlight('completed');
+    else if (viewState === 'completed') {
+      currentView = 'completed';
     }
+    this.setState({view: currentView}, function () {
+      this.showHighlight(currentView);
+    });
+
   }
 
   //placeholder, currently does not work
-  showHighlight(selected){
-    if(this.state.view === 'all' && selected === 'all'){
+  showHighlight(selected) {
+    if (this.state.view === 'all' && selected === 'all') {
       this.setState({
         all: 'selected',
         active: 'unSelected',
         completed: 'unSelected'
       });
     }
-    else if(this.state.view === 'active' && selected === 'active'){
+    else if (this.state.view === 'active' && selected === 'active') {
       this.setState({
         all: 'unSelected',
         active: 'selected',
         completed: 'unSelected'
       });
     }
-    else if(this.state.view === 'completed' && selected === 'completed'){
+    else if (this.state.view === 'completed' && selected === 'completed') {
       this.setState({
         all: 'unSelected',
         active: 'unSelected',
@@ -230,10 +226,10 @@ class Todo extends React.Component {
               <a href="#/all" className={this.state.all} onClick={(e) => this.showView('all')}>All</a>
             </li>
             <li>
-              <a href="#/active" className={this.state.active} onClick={(e) =>this.showView('active')}>Active</a>
+              <a href="#/active" className={this.state.active} onClick={(e) => this.showView('active')}>Active</a>
             </li>
             <li>
-              <a href="#/completed" className={this.state.completed} onClick={(e) =>this.showView('completed')}>Completed</a>
+              <a href="#/completed" className={this.state.completed} onClick={(e) => this.showView('completed')}>Completed</a>
             </li>
             <li className="clearAllCompleteLi" id="clearAllCompleteLi">
               <button className="clearAllComplete" id="clearAllComplete" style={this.showHideClearButton()}>Clear completed</button>
