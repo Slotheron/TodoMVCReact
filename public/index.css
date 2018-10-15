@@ -75,6 +75,7 @@ input[type='checkbox'] {
 .listItem {
     border: 1px solid #ccc;
     padding: 20px 15px 15px 20px;
+    word-wrap: break-word;
 }
 
 .checkBoxLabel {
@@ -101,12 +102,6 @@ input[type=checkbox]:checked + .checkBoxLabel {
 #divLabel {
     display: flex;
     float: left;
-}
-
-.selectFilter {
-	position: absolute;
-	right: 0;
-	left: 0;
 }
 
 .selectFilter li {
@@ -137,5 +132,20 @@ input[type=checkbox]:checked + .checkBoxLabel {
     border: 1px solid #ccc;
     text-align: center;
     padding: 10px 15px 10px 10px;
-    height: 20px;
+}
+
+.clearAllComplete{
+    float: right
+}
+
+@media screen and (max-width: 480px) {
+    .selectFilter li {
+        display: block;
+    }
+    .clearAllComplete{
+        float: none
+    }
+    #divLabel{
+        float: none;
+    }
 }
